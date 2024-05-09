@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useState, useCallback, type KeyboardEvent } from 'react';
+import { useReducer, useEffect, useState, useCallback } from 'react';
 import { useInterval } from 'usehooks-ts';
 
 type Action = { type: 'up' } | { type: 'down' } | { type: 'left' } | { type: 'right' };
@@ -8,7 +8,7 @@ const snakeConfig = {
     x: 50,
     y: 30
   },
-  speed: 100
+  speed: 60
 };
 
 const snakeReducer = (state: Array<number[]>, action: Action): Array<number[]> => {
@@ -62,7 +62,17 @@ const Snake = () => {
   const [snake, snakeDispatch] = useReducer(snakeReducer, [
     [2, 2],
     [2, 3],
-    [2, 4]
+    [2, 4],
+    [2, 5],
+    [2, 6],
+    [2, 7],
+    [2, 8],
+    [2, 9],
+    [2, 10],
+    [2, 11],
+    [2, 12],
+    [2, 13],
+    [2, 14]
   ]);
 
   useInterval(
