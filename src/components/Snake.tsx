@@ -1,6 +1,6 @@
 import { useState, useReducer } from 'react';
 
-type Action = { type: 'down' };
+type Action = { type: 'up' } | { type: 'down' } | { type: 'left' } | { type: 'right' };
 
 const snakeConfig = {
   dimensions: {
@@ -9,10 +9,16 @@ const snakeConfig = {
   }
 };
 
-const snakeReducer = (state: any, action: Action) => {
+const snakeReducer = (state: Array<number[]>, action: Action): Array<number[]> => {
   switch (action.type) {
+    case 'up':
+      return [[state[0][0], state[0][1] - 1], ...state.slice(0, state.length - 1)];
     case 'down':
-      return state.map((coord: number[]) => [coord[0], coord[1] + 1]);
+      return [[state[0][0], state[0][1] + 1], ...state.slice(0, state.length - 1)];
+    case 'left':
+      return [[state[0][0] - 1, state[0][1]], ...state.slice(0, state.length - 1)];
+    case 'right':
+      return [[state[0][0] + 1, state[0][1]], ...state.slice(0, state.length - 1)];
     default:
       return state;
   }
@@ -22,7 +28,7 @@ const Snake = () => {
   const [grid, setGrid] = useState(
     new Array(snakeConfig.dimensions.y).fill(new Array(snakeConfig.dimensions.x).fill(0))
   );
-  const [direction, setDirection] = useState('down');
+  const [direction, setDirection] = useState('right');
   const [snake, dispatch] = useReducer(snakeReducer, [
     [2, 2],
     [2, 3],
@@ -32,11 +38,16 @@ const Snake = () => {
   const handleStart = () => {
     setInterval(() => {
       switch (direction) {
+        case 'up':
+          return dispatch({ type: 'up' });
         case 'down':
-        default:
-          dispatch({ type: 'down' });
+          return dispatch({ type: 'down' });
+        case 'left':
+          return dispatch({ type: 'left' });
+        case 'right':
+          return dispatch({ type: 'right' });
       }
-    }, 250);
+    }, 200);
   };
 
   return (
