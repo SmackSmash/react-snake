@@ -1,5 +1,7 @@
+import Snake from './components/Snake';
+
 const App = () => {
-  return <p className='font-jaro'>App</p>;
+  return <Snake />;
 };
 
 export default App;

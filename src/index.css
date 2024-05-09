@@ -2,3 +2,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-jaro flex min-h-screen w-full items-center justify-center bg-[radial-gradient(#303340,#1B1E28)] text-poimandres-lightgrey;
+  }
+}
