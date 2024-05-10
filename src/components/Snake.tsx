@@ -88,6 +88,8 @@ const Snake = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(0);
+  const [newHighScore, setNewHighScore] = useState(false);
   const [food, setFood] = useState<number[]>([]);
   const [direction, directionDispatch] = useReducer(directionReducer, 'up');
   const [snake, snakeDispatch] = useReducer(snakeReducer, snakeConfig.initialSnake);
@@ -135,10 +137,18 @@ const Snake = () => {
       if (!food.length && Math.floor(Math.random() * 100) < 5) {
         addRandomFood();
       }
+      // Fail state when snake collides with itself
       for (let i = 1; i < snake.length; i++) {
         if (snake[0][0] === snake[i][0] && snake[0][1] === snake[i][1]) {
           setIsPlaying(false);
           setGameOver(true);
+          const highScore = localStorage.getItem('highScore');
+          if (!highScore || score > Number(highScore)) {
+            setNewHighScore(true);
+            localStorage.setItem('highScore', score.toString());
+          } else {
+            setNewHighScore(false);
+          }
         }
       }
     },
@@ -206,6 +216,7 @@ const Snake = () => {
 
   useEffect(() => {
     document.body.addEventListener('keydown', handleKeyDown);
+    setHighScore(Number(localStorage.getItem('highScore')));
     return () => document.body.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
@@ -239,13 +250,18 @@ const Snake = () => {
     <div className='container'>
       <header className='mb-2 flex'>
         <h1 className='mr-4 text-4xl'>🐍 Snake</h1>
-        <h1 className='ml-auto text-4xl text-poimandres-yellow'>{score}</h1>
+        <h1 className='ml-auto text-4xl text-poimandres-yellow'>
+          {score} <span className='text-poimandres-darkslate'>/{highScore}</span>
+        </h1>
       </header>
       <div className='relative w-full'>
         {gameOver && (
           <div className='absolute flex h-full w-full flex-col items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm'>
             <h2 className='text-5xl text-poimandres-darkpink'>GAME OVER</h2>
             <h3 className='text-3xl text-poimandres-lighterblue'>Score: {score}</h3>
+            {newHighScore && (
+              <h3 className='text-3xl text-poimandres-lightgreen'>NEW HIGH SCORE!!!</h3>
+            )}
           </div>
         )}
         {grid.map((arry: number[], y: number) => (
