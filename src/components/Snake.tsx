@@ -17,7 +17,7 @@ interface SnakeConfig {
 
 const snakeConfig: SnakeConfig = {
   dimensions: {
-    x: 30,
+    x: 31,
     y: 20
   },
   speed: 60,
@@ -152,8 +152,12 @@ const Snake = () => {
       if (!food.length && Math.floor(Math.random() * 100) < 5) {
         addRandomFood('normal');
       }
-      if (!specialFood.length && Math.floor(Math.random() * 100) < 5) {
+      if (!specialFood.length && Math.floor(Math.random() * 100) < 0.5) {
         addRandomFood('special');
+      }
+      // Randomly remove special food
+      if (specialFood.length && Math.floor(Math.random() * 100) < 2) {
+        setSpecialFood([]);
       }
       // Fail state when snake collides with itself
       for (let i = 1; i < snake.length; i++) {
@@ -178,6 +182,7 @@ const Snake = () => {
       setGameOver(false);
       setScore(0);
       setFood([]);
+      setSpecialFood([]);
       snakeDispatch({ type: 'reset' });
       directionDispatch({ type: 'up' });
     } else {
@@ -239,7 +244,6 @@ const Snake = () => {
   }, [handleKeyDown]);
 
   const handleDPad = (dPadDirection: 'up' | 'down' | 'left' | 'right') => {
-    console.log(dPadDirection);
     switch (dPadDirection) {
       case 'up':
         if (direction !== 'down') {
@@ -334,7 +338,7 @@ const Snake = () => {
       <div className='mt-10'>
         <div className='flex h-14 justify-center'>
           <button
-            className='flex w-14 items-center justify-center rounded-t-lg border-x border-t bg-poimandres-blackslate active:bg-poimandres-lightgreen active:text-poimandres-blackslate'
+            className='flex w-14 items-center justify-center rounded-t-lg border-x border-t border-poimandres-darkblue bg-poimandres-blackslate active:bg-poimandres-darkslate '
             onClick={() => handleDPad('up')}
           >
             <IoIosArrowUp />
@@ -342,14 +346,14 @@ const Snake = () => {
         </div>
         <div className='flex h-14 justify-center'>
           <button
-            className='b-poimandeas-white flex w-14 items-center justify-center rounded-l-lg border-y border-l bg-poimandres-blackslate active:bg-poimandres-lightgreen active:text-poimandres-blackslate'
+            className='b-poimandeas-white flex w-14 items-center justify-center rounded-l-lg border-y border-l border-poimandres-darkblue bg-poimandres-blackslate active:bg-poimandres-darkslate'
             onClick={() => handleDPad('left')}
           >
             <IoIosArrowBack />
           </button>
           <div className='w-14 bg-poimandres-blackslate'></div>
           <button
-            className='flex w-14 items-center justify-center rounded-r-lg border-y border-r bg-poimandres-blackslate active:bg-poimandres-lightgreen active:text-poimandres-blackslate'
+            className='flex w-14 items-center justify-center rounded-r-lg border-y border-r border-poimandres-darkblue bg-poimandres-blackslate active:bg-poimandres-darkslate '
             onClick={() => handleDPad('right')}
             id='right'
           >
@@ -358,7 +362,7 @@ const Snake = () => {
         </div>
         <div className='flex h-14 justify-center'>
           <button
-            className='flex w-14 items-center justify-center rounded-b-lg border-x border-b bg-poimandres-blackslate active:bg-poimandres-lightgreen active:text-poimandres-blackslate'
+            className='flex w-14 items-center justify-center rounded-b-lg border-x border-b border-poimandres-darkblue bg-poimandres-blackslate active:bg-poimandres-darkslate'
             onClick={() => handleDPad('down')}
           >
             <IoIosArrowDown />
