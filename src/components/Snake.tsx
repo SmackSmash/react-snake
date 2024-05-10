@@ -71,18 +71,9 @@ const Snake = () => {
   const [snake, snakeDispatch] = useReducer(snakeReducer, [
     [2, 2],
     [2, 3],
-    [2, 4],
-    [2, 5],
-    [2, 6],
-    [2, 7],
-    [2, 8],
-    [2, 9],
-    [2, 10],
-    [2, 11],
-    [2, 12],
-    [2, 13],
-    [2, 14]
+    [2, 4]
   ]);
+  const [tail, setTail] = useState<number[]>([]);
 
   const addRandomFood = (): void => {
     const foodCoords = getRandomCoords();
@@ -111,10 +102,16 @@ const Snake = () => {
           snakeDispatch({ type: 'right' });
           break;
       }
+      // Lengthen snake
+      if (tail.length) {
+        snake.push(tail);
+        setTail([]);
+      }
       // Consume foor and update score
       if (snake[0][0] === food[0] && snake[0][1] === food[1]) {
         setFood([]);
         setScore(score + 10);
+        setTail(snake[snake.length - 1]);
       }
       // Randomly add food to grid
       if (!food.length && Math.floor(Math.random() * 100) < 5) {
