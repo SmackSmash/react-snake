@@ -53,11 +53,20 @@ const directionReducer = (state: string, action: Action): string => {
   }
 };
 
+const getRandomCoords = (): [number, number] => {
+  return [
+    Math.floor(Math.random() * (snakeConfig.dimensions.x - 1)),
+    Math.floor(Math.random() * (snakeConfig.dimensions.y - 1))
+  ];
+};
+
 const Snake = () => {
   const grid = new Array(snakeConfig.dimensions.y).fill(
     new Array(snakeConfig.dimensions.x).fill(0)
   );
   const [isPlaying, setIsPlaying] = useState(false);
+  const [score, setScore] = useState(0);
+  const [food, setFood] = useState<number[]>([]);
   const [direction, directionDispatch] = useReducer(directionReducer, 'right');
   const [snake, snakeDispatch] = useReducer(snakeReducer, [
     [2, 2],
@@ -75,17 +84,41 @@ const Snake = () => {
     [2, 14]
   ]);
 
+  const addRandomFood = (): void => {
+    const foodCoords = getRandomCoords();
+    for (const segment of snake) {
+      if (segment[0] === foodCoords[0] && segment[1] === foodCoords[1]) {
+        return addRandomFood();
+      }
+    }
+    setFood(foodCoords);
+  };
+
   useInterval(
     () => {
+      // Move snake in set direction
       switch (direction) {
         case 'up':
-          return snakeDispatch({ type: 'up' });
+          snakeDispatch({ type: 'up' });
+          break;
         case 'down':
-          return snakeDispatch({ type: 'down' });
+          snakeDispatch({ type: 'down' });
+          break;
         case 'left':
-          return snakeDispatch({ type: 'left' });
+          snakeDispatch({ type: 'left' });
+          break;
         case 'right':
-          return snakeDispatch({ type: 'right' });
+          snakeDispatch({ type: 'right' });
+          break;
+      }
+      // Consume foor and update score
+      if (snake[0][0] === food[0] && snake[0][1] === food[1]) {
+        setFood([]);
+        setScore(score + 10);
+      }
+      // Randomly add food to grid
+      if (!food.length && Math.floor(Math.random() * 100) < 5) {
+        addRandomFood();
       }
     },
     isPlaying ? snakeConfig.speed : null
@@ -122,9 +155,14 @@ const Snake = () => {
 
   return (
     <div className='container'>
-      <h1>Snake</h1>
-      <h1>{direction}</h1>
-      <button onClick={handleStart}>Start</button>
+      <header className='flex'>
+        <h1 className='mr-4 text-2xl'>Snake</h1>
+        <h1 className='mr-4'>{direction}</h1>
+        <button className='ml-auto' onClick={handleStart}>
+          Start
+        </button>
+        <h1 className='ml-6 text-2xl'>{score}</h1>
+      </header>
       <div className='w-full'>
         {grid.map((arry: number[], y: number) => (
           <div className='flex' key={`row${y}`}>
@@ -138,6 +176,14 @@ const Snake = () => {
                     ></div>
                   );
                 }
+              }
+              if (food.length && food[0] === x && food[1] === y) {
+                return (
+                  <div
+                    className='m-[1px] h-[10px] w-[10px] bg-poimandres-lightpink'
+                    key={`${x}${y}`}
+                  ></div>
+                );
               }
               return (
                 <div
