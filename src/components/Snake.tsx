@@ -1,14 +1,32 @@
 import { useReducer, useEffect, useState, useCallback } from 'react';
 import { useInterval } from 'usehooks-ts';
 
-type Action = { type: 'up' } | { type: 'down' } | { type: 'left' } | { type: 'right' };
+type Action =
+  | { type: 'up' }
+  | { type: 'down' }
+  | { type: 'left' }
+  | { type: 'right' }
+  | { type: 'reset' };
 
-const snakeConfig = {
+interface SnakeConfig {
+  dimensions: { x: number; y: number };
+  speed: number;
+  initialSnake: number[][];
+}
+
+const snakeConfig: SnakeConfig = {
   dimensions: {
     x: 50,
     y: 30
   },
-  speed: 60
+  speed: 60,
+  get initialSnake() {
+    return [
+      [Math.floor(this.dimensions.x / 2), Math.floor(this.dimensions.y / 2)],
+      [Math.floor(this.dimensions.x / 2), Math.floor(this.dimensions.y / 2) + 1],
+      [Math.floor(this.dimensions.x / 2), Math.floor(this.dimensions.y / 2) + 2]
+    ];
+  }
 };
 
 const snakeReducer = (state: Array<number[]>, action: Action): Array<number[]> => {
@@ -33,6 +51,8 @@ const snakeReducer = (state: Array<number[]>, action: Action): Array<number[]> =
         return [[0, state[0][1]], ...state.slice(0, state.length - 1)];
       }
       return [[state[0][0] + 1, state[0][1]], ...state.slice(0, state.length - 1)];
+    case 'reset':
+      return [...snakeConfig.initialSnake];
     default:
       return state;
   }
@@ -65,14 +85,11 @@ const Snake = () => {
     new Array(snakeConfig.dimensions.x).fill(0)
   );
   const [isPlaying, setIsPlaying] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [food, setFood] = useState<number[]>([]);
-  const [direction, directionDispatch] = useReducer(directionReducer, 'right');
-  const [snake, snakeDispatch] = useReducer(snakeReducer, [
-    [2, 2],
-    [2, 3],
-    [2, 4]
-  ]);
+  const [direction, directionDispatch] = useReducer(directionReducer, 'up');
+  const [snake, snakeDispatch] = useReducer(snakeReducer, snakeConfig.initialSnake);
   const [tail, setTail] = useState<number[]>([]);
 
   const addRandomFood = (): void => {
@@ -117,6 +134,12 @@ const Snake = () => {
       if (!food.length && Math.floor(Math.random() * 100) < 5) {
         addRandomFood();
       }
+      for (let i = 1; i < snake.length; i++) {
+        if (snake[0][0] === snake[i][0] && snake[0][1] === snake[i][1]) {
+          setIsPlaying(false);
+          setGameOver(true);
+        }
+      }
     },
     isPlaying ? snakeConfig.speed : null
   );
@@ -146,21 +169,31 @@ const Snake = () => {
     document.body.addEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  const handleStart = () => {
-    setIsPlaying(true);
+  const handleGameState = () => {
+    if (gameOver) {
+      setGameOver(false);
+      setScore(0);
+      setFood([]);
+      snakeDispatch({ type: 'reset' });
+      directionDispatch({ type: 'up' });
+    } else {
+      setIsPlaying(!isPlaying);
+    }
   };
 
   return (
     <div className='container'>
-      <header className='flex'>
-        <h1 className='mr-4 text-2xl'>Snake</h1>
-        <h1 className='mr-4'>{direction}</h1>
-        <button className='ml-auto' onClick={handleStart}>
-          Start
-        </button>
-        <h1 className='ml-6 text-2xl'>{score}</h1>
+      <header className='mb-2 flex'>
+        <h1 className='mr-4 text-4xl'>🐍 Snake</h1>
+        <h1 className='ml-auto text-4xl text-poimandres-yellow'>{score}</h1>
       </header>
-      <div className='w-full'>
+      <div className='relative w-full'>
+        {gameOver && (
+          <div className='absolute flex h-full w-full flex-col items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm'>
+            <h2 className='text-5xl text-poimandres-darkpink'>GAME OVER</h2>
+            <h3 className='text-3xl text-poimandres-lightblue'>Score: {score}</h3>
+          </div>
+        )}
         {grid.map((arry: number[], y: number) => (
           <div className='flex' key={`row${y}`}>
             {arry.map((_arrx: number, x: number) => {
@@ -192,6 +225,12 @@ const Snake = () => {
           </div>
         ))}
       </div>
+      <button
+        className='mt-2 w-full bg-poimandres-darkerblue py-2 text-2xl outline-none hover:bg-poimandres-darkblue'
+        onClick={handleGameState}
+      >
+        {isPlaying ? 'Pause' : gameOver ? 'Reset' : 'Start'}
+      </button>
     </div>
   );
 };
