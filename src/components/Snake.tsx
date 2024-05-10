@@ -19,7 +19,7 @@ const snakeConfig: SnakeConfig = {
     x: 30,
     y: 20
   },
-  speed: 60,
+  speed: 500, // 60
   get initialSnake() {
     return [
       [Math.floor(this.dimensions.x / 2), Math.floor(this.dimensions.y / 2)],
@@ -144,13 +144,27 @@ const Snake = () => {
     isPlaying ? snakeConfig.speed : null
   );
 
+  const handleGameState = useCallback(() => {
+    if (gameOver) {
+      setGameOver(false);
+      setScore(0);
+      setFood([]);
+      snakeDispatch({ type: 'reset' });
+      directionDispatch({ type: 'up' });
+    } else {
+      setIsPlaying(!isPlaying);
+    }
+  }, [gameOver, isPlaying]);
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
+      console.log(direction, e.code);
       if (
         e.code === 'ArrowUp' ||
         e.code === 'ArrowDown' ||
         e.code === 'ArrowLeft' ||
-        e.code === 'ArrowRight'
+        e.code === 'ArrowRight' ||
+        e.code === 'Space'
       ) {
         e.preventDefault();
       }
@@ -174,26 +188,17 @@ const Snake = () => {
           if (direction !== 'left') {
             return directionDispatch({ type: 'right' });
           }
+          break;
+        case 'Space':
+          handleGameState();
       }
     },
-    [direction]
+    [direction, handleGameState]
   );
 
   useEffect(() => {
     document.body.addEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
-
-  const handleGameState = () => {
-    if (gameOver) {
-      setGameOver(false);
-      setScore(0);
-      setFood([]);
-      snakeDispatch({ type: 'reset' });
-      directionDispatch({ type: 'up' });
-    } else {
-      setIsPlaying(!isPlaying);
-    }
-  };
 
   return (
     <div className='container'>
