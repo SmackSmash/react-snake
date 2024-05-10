@@ -144,26 +144,40 @@ const Snake = () => {
     isPlaying ? snakeConfig.speed : null
   );
 
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (
-      e.code === 'ArrowUp' ||
-      e.code === 'ArrowDown' ||
-      e.code === 'ArrowLeft' ||
-      e.code === 'ArrowRight'
-    ) {
-      e.preventDefault();
-    }
-    switch (e.code) {
-      case 'ArrowUp':
-        return directionDispatch({ type: 'up' });
-      case 'ArrowDown':
-        return directionDispatch({ type: 'down' });
-      case 'ArrowLeft':
-        return directionDispatch({ type: 'left' });
-      case 'ArrowRight':
-        return directionDispatch({ type: 'right' });
-    }
-  }, []);
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (
+        e.code === 'ArrowUp' ||
+        e.code === 'ArrowDown' ||
+        e.code === 'ArrowLeft' ||
+        e.code === 'ArrowRight'
+      ) {
+        e.preventDefault();
+      }
+      switch (e.code) {
+        case 'ArrowUp':
+          if (direction !== 'down') {
+            return directionDispatch({ type: 'up' });
+          }
+          break;
+        case 'ArrowDown':
+          if (direction !== 'up') {
+            return directionDispatch({ type: 'down' });
+          }
+          break;
+        case 'ArrowLeft':
+          if (direction !== 'right') {
+            return directionDispatch({ type: 'left' });
+          }
+          break;
+        case 'ArrowRight':
+          if (direction !== 'left') {
+            return directionDispatch({ type: 'right' });
+          }
+      }
+    },
+    [direction]
+  );
 
   useEffect(() => {
     document.body.addEventListener('keydown', handleKeyDown);
@@ -191,7 +205,7 @@ const Snake = () => {
         {gameOver && (
           <div className='absolute flex h-full w-full flex-col items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm'>
             <h2 className='text-5xl text-poimandres-darkpink'>GAME OVER</h2>
-            <h3 className='text-3xl text-poimandres-lightblue'>Score: {score}</h3>
+            <h3 className='text-3xl text-poimandres-lighterblue'>Score: {score}</h3>
           </div>
         )}
         {grid.map((arry: number[], y: number) => (
