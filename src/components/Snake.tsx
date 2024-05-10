@@ -307,7 +307,7 @@ const Snake = () => {
       <div className='mt-10'>
         <div className='flex h-14 justify-center'>
           <button
-            className='flex w-14 items-center justify-center border-x border-t bg-poimandres-blackslate'
+            className='flex w-14 items-center justify-center rounded-t-lg border-x border-t bg-poimandres-blackslate active:bg-poimandres-lightgreen active:text-poimandres-blackslate'
             onClick={() => handleDPad('up')}
           >
             <IoIosArrowUp />
@@ -315,14 +315,14 @@ const Snake = () => {
         </div>
         <div className='flex h-14 justify-center'>
           <button
-            className='b-poimandeas-white flex w-14 items-center justify-center border-y border-l bg-poimandres-blackslate'
+            className='b-poimandeas-white flex w-14 items-center justify-center rounded-l-lg border-y border-l bg-poimandres-blackslate active:bg-poimandres-lightgreen active:text-poimandres-blackslate'
             onClick={() => handleDPad('left')}
           >
             <IoIosArrowBack />
           </button>
           <div className='w-14 bg-poimandres-blackslate'></div>
           <button
-            className='flex w-14 items-center justify-center border-y border-r bg-poimandres-blackslate'
+            className='flex w-14 items-center justify-center rounded-r-lg border-y border-r bg-poimandres-blackslate active:bg-poimandres-lightgreen active:text-poimandres-blackslate'
             onClick={() => handleDPad('right')}
             id='right'
           >
@@ -331,7 +331,7 @@ const Snake = () => {
         </div>
         <div className='flex h-14 justify-center'>
           <button
-            className='flex w-14 items-center justify-center border-x border-b bg-poimandres-blackslate'
+            className='flex w-14 items-center justify-center rounded-b-lg border-x border-b bg-poimandres-blackslate active:bg-poimandres-lightgreen active:text-poimandres-blackslate'
             onClick={() => handleDPad('down')}
           >
             <IoIosArrowDown />
