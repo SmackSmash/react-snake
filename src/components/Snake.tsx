@@ -1,6 +1,7 @@
 import { useReducer, useEffect, useState, useCallback } from 'react';
 import { useInterval } from 'usehooks-ts';
 import { IoIosArrowUp, IoIosArrowDown, IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import Instructions from './Instructions';
 
 type Action =
   | { type: 'up' }
@@ -107,6 +108,7 @@ const Snake = () => {
   const [direction, directionDispatch] = useReducer(directionReducer, 'up');
   const [snake, snakeDispatch] = useReducer(snakeReducer, snakeConfig.initialSnake);
   const [tail, setTail] = useState<number[]>([]);
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const addRandomFood = (type: 'normal' | 'special'): void => {
     const foodCoords = getRandomCoords();
@@ -283,12 +285,29 @@ const Snake = () => {
     }
   };
 
+  const handleShowInstructions = () => {
+    setShowInstructions(!showInstructions);
+  };
+
   return (
-    <div className='container'>
-      <header className='mb-2 flex'>
-        <h1 className='mr-4 text-4xl'>🐍 Snake</h1>
+    <div className='container flex flex-col items-center'>
+      {showInstructions && (
+        <Instructions
+          onCloseInstructions={handleShowInstructions}
+          foodValue={snakeConfig.foodValue}
+          specialFoodValue={snakeConfig.specialFoodValue}
+        />
+      )}
+      <header className='mb-2 flex w-full items-center'>
+        <h1 className='mr-2 text-3xl'>🐍 Snake</h1>
+        <button
+          className='mt-2 h-4 w-4 rounded-full border font-mono text-xs text-poimandres-white'
+          onClick={handleShowInstructions}
+        >
+          ?
+        </button>
         <h1 className='ml-auto text-4xl text-poimandres-yellow'>
-          {score} <span className='text-poimandres-darkslate'>/{highScore}</span>
+          {score} <span className='text-2xl text-poimandres-darkslate'>/{highScore}</span>
         </h1>
       </header>
       <div className='relative w-full'>
