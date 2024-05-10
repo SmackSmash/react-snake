@@ -19,7 +19,7 @@ const snakeConfig: SnakeConfig = {
     x: 30,
     y: 20
   },
-  speed: 500, // 60
+  speed: 60,
   get initialSnake() {
     return [
       [Math.floor(this.dimensions.x / 2), Math.floor(this.dimensions.y / 2)],
@@ -158,33 +158,40 @@ const Snake = () => {
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      console.log(direction, e.code);
       if (
         e.code === 'ArrowUp' ||
+        e.code === 'KeyW' ||
         e.code === 'ArrowDown' ||
+        e.code === 'KeyS' ||
         e.code === 'ArrowLeft' ||
+        e.code === 'KeyA' ||
         e.code === 'ArrowRight' ||
+        e.code === 'KeyD' ||
         e.code === 'Space'
       ) {
         e.preventDefault();
       }
       switch (e.code) {
         case 'ArrowUp':
+        case 'KeyW':
           if (direction !== 'down') {
             return directionDispatch({ type: 'up' });
           }
           break;
         case 'ArrowDown':
+        case 'KeyS':
           if (direction !== 'up') {
             return directionDispatch({ type: 'down' });
           }
           break;
         case 'ArrowLeft':
+        case 'KeyA':
           if (direction !== 'right') {
             return directionDispatch({ type: 'left' });
           }
           break;
         case 'ArrowRight':
+        case 'KeyD':
           if (direction !== 'left') {
             return directionDispatch({ type: 'right' });
           }
@@ -198,6 +205,7 @@ const Snake = () => {
 
   useEffect(() => {
     document.body.addEventListener('keydown', handleKeyDown);
+    return () => document.body.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
   return (
@@ -217,6 +225,7 @@ const Snake = () => {
           <div className='flex' key={`row${y}`}>
             {arry.map((_arrx: number, x: number) => {
               for (const coord of snake) {
+                // Snake cell
                 if (coord[0] === x && coord[1] === y) {
                   return (
                     <div
@@ -226,6 +235,7 @@ const Snake = () => {
                   );
                 }
               }
+              // Fiid cell
               if (food.length && food[0] === x && food[1] === y) {
                 return (
                   <div
@@ -234,6 +244,7 @@ const Snake = () => {
                   ></div>
                 );
               }
+              // Empty cell
               return (
                 <div
                   className='m-[1px] h-[10px] w-[10px] bg-poimandres-blackslate'
