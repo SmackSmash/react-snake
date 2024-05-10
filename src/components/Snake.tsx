@@ -124,7 +124,7 @@ const Snake = () => {
         snake.push(tail);
         setTail([]);
       }
-      // Consume foor and update score
+      // Consume food and update score
       if (snake[0][0] === food[0] && snake[0][1] === food[1]) {
         setFood([]);
         setScore(score + 10);
@@ -235,7 +235,7 @@ const Snake = () => {
                   );
                 }
               }
-              // Fiid cell
+              // Food cell
               if (food.length && food[0] === x && food[1] === y) {
                 return (
                   <div
