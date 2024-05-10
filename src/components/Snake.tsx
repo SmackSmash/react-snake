@@ -13,21 +13,33 @@ interface SnakeConfig {
   dimensions: { x: number; y: number };
   speed: number;
   initialSnake: number[][];
+  foodChance: number;
+  foodValue: number;
+  specialFoodChance: number;
+  specialFoodValue: number;
+  specialFoodRemovalChance: number;
 }
 
 const snakeConfig: SnakeConfig = {
   dimensions: {
+    // Dimensions of the snake board in cells
     x: 31,
     y: 20
   },
-  speed: 60,
+  speed: 60, // How often the board is refreshed in milliseconds
   get initialSnake() {
+    // Starting position for the cells of the snake, 3 cells by default
     return [
       [Math.floor(this.dimensions.x / 2), Math.floor(this.dimensions.y / 2)],
       [Math.floor(this.dimensions.x / 2), Math.floor(this.dimensions.y / 2) + 1],
       [Math.floor(this.dimensions.x / 2), Math.floor(this.dimensions.y / 2) + 2]
     ];
-  }
+  },
+  foodChance: 5, // Percantage chance that food will appear on next board refresh
+  foodValue: 10, // Number of points awarded for eating food
+  specialFoodChance: 0.5, // Percantage chance that special food will appear on next board refresh
+  specialFoodValue: 50, // Number of points awarded for eating special food
+  specialFoodRemovalChance: 2 // Percantage chance that special food will disappear on next board refresh
 };
 
 const snakeReducer = (state: Array<number[]>, action: Action): Array<number[]> => {
@@ -140,23 +152,26 @@ const Snake = () => {
       // Consume food and update score
       if (snake[0][0] === food[0] && snake[0][1] === food[1]) {
         setFood([]);
-        setScore(score + 10);
+        setScore(score + snakeConfig.foodValue);
         setTail(snake[snake.length - 1]);
       }
       if (snake[0][0] === specialFood[0] && snake[0][1] === specialFood[1]) {
         setSpecialFood([]);
-        setScore(score + 50);
+        setScore(score + snakeConfig.specialFoodValue);
         setTail(snake[snake.length - 1]);
       }
       // Randomly add food to grid
-      if (!food.length && Math.floor(Math.random() * 100) < 5) {
+      if (!food.length && Math.floor(Math.random() * 100) < snakeConfig.foodChance) {
         addRandomFood('normal');
       }
-      if (!specialFood.length && Math.floor(Math.random() * 100) < 0.5) {
+      if (!specialFood.length && Math.floor(Math.random() * 100) < snakeConfig.specialFoodChance) {
         addRandomFood('special');
       }
       // Randomly remove special food
-      if (specialFood.length && Math.floor(Math.random() * 100) < 2) {
+      if (
+        specialFood.length &&
+        Math.floor(Math.random() * 100) < snakeConfig.specialFoodRemovalChance
+      ) {
         setSpecialFood([]);
       }
       // Fail state when snake collides with itself
