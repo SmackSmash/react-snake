@@ -1,4 +1,5 @@
 import { IoMdClose } from 'react-icons/io';
+import { MdOutlineSpaceBar } from 'react-icons/md';
 
 interface InstructionsProps {
   onCloseInstructions: () => void;
@@ -15,7 +16,10 @@ const Instructions = ({ onCloseInstructions, foodValue, specialFoodValue }: Inst
         </button>
         <div className='align-center container flex flex-col items-center justify-center'>
           <h1 className='mb-2 text-2xl text-poimandres-yellow'>How to play</h1>
-          <p>Start the game by clicking 'Start', or by pressing the spacebar.</p>
+          <p>
+            Start the game by clicking 'Start', or by pressing{' '}
+            <MdOutlineSpaceBar className='inline-block' />
+          </p>
           <p>Move the snake using the D-Pad, or by using the arrow keys or WASD.</p>
           <p>
             Collect <span className='ml-1 text-poimandres-lightpink'>food</span>
