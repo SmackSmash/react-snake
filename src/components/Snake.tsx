@@ -1,5 +1,6 @@
 import { useReducer, useEffect, useState, useCallback } from 'react';
 import { useInterval } from 'usehooks-ts';
+import { IoIosArrowUp, IoIosArrowDown, IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 type Action =
   | { type: 'up' }
@@ -208,6 +209,32 @@ const Snake = () => {
     return () => document.body.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
+  const handleDPad = (dPadDirection: 'up' | 'down' | 'left' | 'right') => {
+    console.log(dPadDirection);
+    switch (dPadDirection) {
+      case 'up':
+        if (direction !== 'down') {
+          return directionDispatch({ type: 'up' });
+        }
+        break;
+      case 'down':
+        if (direction !== 'up') {
+          return directionDispatch({ type: 'down' });
+        }
+        break;
+      case 'left':
+        if (direction !== 'right') {
+          return directionDispatch({ type: 'left' });
+        }
+        break;
+      case 'right':
+        if (direction !== 'left') {
+          return directionDispatch({ type: 'right' });
+        }
+        break;
+    }
+  };
+
   return (
     <div className='container'>
       <header className='mb-2 flex'>
@@ -263,15 +290,36 @@ const Snake = () => {
       </button>
       <div className='mt-10'>
         <div className='flex h-14 justify-center'>
-          <button className='w-14 bg-poimandres-blackslate'>Up</button>
+          <button
+            className='flex w-14 items-center justify-center border-x border-t bg-poimandres-blackslate'
+            onClick={() => handleDPad('up')}
+          >
+            <IoIosArrowUp />
+          </button>
         </div>
         <div className='flex h-14 justify-center'>
-          <button className='w-14 bg-poimandres-blackslate'>Left</button>
+          <button
+            className='b-poimandeas-white flex w-14 items-center justify-center border-y border-l bg-poimandres-blackslate'
+            onClick={() => handleDPad('left')}
+          >
+            <IoIosArrowBack />
+          </button>
           <div className='w-14 bg-poimandres-blackslate'></div>
-          <button className='w-14 bg-poimandres-blackslate'>Right</button>
+          <button
+            className='flex w-14 items-center justify-center border-y border-r bg-poimandres-blackslate'
+            onClick={() => handleDPad('right')}
+            id='right'
+          >
+            <IoIosArrowForward />
+          </button>
         </div>
         <div className='flex h-14 justify-center'>
-          <button className='w-14 bg-poimandres-blackslate'>Down</button>
+          <button
+            className='flex w-14 items-center justify-center border-x border-b bg-poimandres-blackslate'
+            onClick={() => handleDPad('down')}
+          >
+            <IoIosArrowDown />
+          </button>
         </div>
       </div>
     </div>
