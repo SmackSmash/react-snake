@@ -91,18 +91,28 @@ const Snake = () => {
   const [highScore, setHighScore] = useState(0);
   const [newHighScore, setNewHighScore] = useState(false);
   const [food, setFood] = useState<number[]>([]);
+  const [specialFood, setSpecialFood] = useState<number[]>([]);
   const [direction, directionDispatch] = useReducer(directionReducer, 'up');
   const [snake, snakeDispatch] = useReducer(snakeReducer, snakeConfig.initialSnake);
   const [tail, setTail] = useState<number[]>([]);
 
-  const addRandomFood = (): void => {
+  const addRandomFood = (type: 'normal' | 'special'): void => {
     const foodCoords = getRandomCoords();
+
     for (const segment of snake) {
       if (segment[0] === foodCoords[0] && segment[1] === foodCoords[1]) {
-        return addRandomFood();
+        return addRandomFood(type);
       }
     }
-    setFood(foodCoords);
+
+    switch (type) {
+      case 'normal':
+        setFood(foodCoords);
+        break;
+      case 'special':
+        setSpecialFood(foodCoords);
+        break;
+    }
   };
 
   useInterval(
@@ -133,9 +143,17 @@ const Snake = () => {
         setScore(score + 10);
         setTail(snake[snake.length - 1]);
       }
+      if (snake[0][0] === specialFood[0] && snake[0][1] === specialFood[1]) {
+        setSpecialFood([]);
+        setScore(score + 50);
+        setTail(snake[snake.length - 1]);
+      }
       // Randomly add food to grid
       if (!food.length && Math.floor(Math.random() * 100) < 5) {
-        addRandomFood();
+        addRandomFood('normal');
+      }
+      if (!specialFood.length && Math.floor(Math.random() * 100) < 5) {
+        addRandomFood('special');
       }
       // Fail state when snake collides with itself
       for (let i = 1; i < snake.length; i++) {
@@ -272,7 +290,7 @@ const Snake = () => {
                 if (coord[0] === x && coord[1] === y) {
                   return (
                     <div
-                      className='m-[1px] h-[10px] w-[10px] bg-poimandres-lightgreen'
+                      className='m-[1px] h-[10px] w-[10px] rounded-sm bg-poimandres-lightgreen'
                       key={`${x}${y}`}
                     ></div>
                   );
@@ -282,7 +300,16 @@ const Snake = () => {
               if (food.length && food[0] === x && food[1] === y) {
                 return (
                   <div
-                    className='m-[1px] h-[10px] w-[10px] bg-poimandres-lightpink'
+                    className='m-[1px] h-[10px] w-[10px] rounded  bg-poimandres-lightpink'
+                    key={`${x}${y}`}
+                  ></div>
+                );
+              }
+              //Special food cell
+              if (specialFood.length && specialFood[0] === x && specialFood[1] === y) {
+                return (
+                  <div
+                    className='m-[1px] h-[10px] w-[10px] rotate-45 bg-poimandres-yellow'
                     key={`${x}${y}`}
                   ></div>
                 );
@@ -290,7 +317,7 @@ const Snake = () => {
               // Empty cell
               return (
                 <div
-                  className='m-[1px] h-[10px] w-[10px] bg-poimandres-blackslate'
+                  className='m-[1px] h-[10px] w-[10px] rounded-sm bg-poimandres-blackslate'
                   key={`${x}${y}`}
                 ></div>
               );
