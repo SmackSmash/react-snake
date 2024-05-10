@@ -14,26 +14,30 @@ const Instructions = ({ onCloseInstructions, foodValue, specialFoodValue }: Inst
         <button onClick={onCloseInstructions}>
           <IoMdClose className='absolute right-2 top-2 h-16 w-16 text-poimandres-darkpink' />
         </button>
-        <div className='align-center container flex flex-col items-center justify-center'>
-          <h1 className='mb-2 text-2xl text-poimandres-yellow'>How to play</h1>
-          <p>
-            Start the game by clicking 'Start', or by pressing{' '}
-            <MdOutlineSpaceBar className='inline-block' />
+        <div className='align-center container flex flex-col items-center justify-center px-4'>
+          <h1 className='mb-2 text-center text-2xl text-poimandres-yellow'>How to play</h1>
+          <p className='text-center'>
+            Start the game by clicking 'Start', or by pressing
+            <MdOutlineSpaceBar className='ml-2 inline-block' />
           </p>
-          <p>Move the snake using the D-Pad, or by using the arrow keys or WASD.</p>
-          <p>
-            Collect <span className='ml-1 text-poimandres-lightpink'>food</span>
+          <p className='text-center'>
+            Move the snake using the D-Pad, or by using the arrow keys or WASD
+          </p>
+          <p className='text-center'>
+            Eat the <span className='ml-1 text-poimandres-lightpink'>food</span>
             <div className='mx-2 inline-block h-[10px] w-[10px] rounded  bg-poimandres-lightpink'></div>{' '}
-            to score {foodValue} points.
+            to score {foodValue} points
           </p>
-          <p>
-            {' '}
-            Collect <span className='ml-1 text-poimandres-yellow'>special food</span>
+          <p className='text-center'>
+            Eat the <span className='ml-1 text-poimandres-yellow'>special food</span>
             <div className='mx-2 inline-block h-[10px] w-[10px] rotate-45 bg-poimandres-yellow'></div>
             to score {specialFoodValue} points
           </p>
-          <p>The game ends when you collide with your tail.</p>
-          <p className='mt-2 text-2xl text-poimandres-lightgreen'>GOOD LUCK!</p>
+          <p className='text-center'>
+            When you eat food the length of your snake will increase by 1
+          </p>
+          <p className='text-center'>The game ends when you collide with your tail.</p>
+          <p className='mt-2 text-center text-2xl text-poimandres-lightgreen'>GOOD LUCK!</p>
         </div>
       </div>
     </div>
