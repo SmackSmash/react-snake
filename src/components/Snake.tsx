@@ -16,8 +16,8 @@ interface SnakeConfig {
 
 const snakeConfig: SnakeConfig = {
   dimensions: {
-    x: 50,
-    y: 30
+    x: 30,
+    y: 20
   },
   speed: 60,
   get initialSnake() {
@@ -226,7 +226,7 @@ const Snake = () => {
         ))}
       </div>
       <button
-        className='mt-2 w-full bg-poimandres-darkerblue py-2 text-2xl outline-none hover:bg-poimandres-darkblue'
+        className='mt-2 w-full rounded bg-poimandres-darkerblue py-2 text-2xl uppercase text-poimandres-lighterblue shadow-lg outline-none hover:bg-poimandres-darkblue hover:[text-shadow:_4px_4px_0_#F087BD,_-4px_-4px_0_#5DE4C7]'
         onClick={handleGameState}
       >
         {isPlaying ? 'Pause' : gameOver ? 'Reset' : 'Start'}

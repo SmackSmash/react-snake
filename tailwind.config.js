@@ -25,6 +25,11 @@ export default {
         'poimandres-lighterblue': '#E4F0FB',
         'poimandres-lightgrey': '#D4D6DE',
         'poimandres-white': '#FFFFFF'
+      },
+      textShadow: {
+        sm: '0 1px 2px var(--tw-shadow-color)',
+        DEFAULT: '0 2px 4px var(--tw-shadow-color)',
+        lg: '0 8px 16px var(--tw-shadow-color)'
       }
     }
   },
