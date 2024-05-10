@@ -261,6 +261,19 @@ const Snake = () => {
       >
         {isPlaying ? 'Pause' : gameOver ? 'Reset' : 'Start'}
       </button>
+      <div className='mt-10'>
+        <div className='flex h-14 justify-center'>
+          <button className='w-14 bg-poimandres-blackslate'>Up</button>
+        </div>
+        <div className='flex h-14 justify-center'>
+          <button className='w-14 bg-poimandres-blackslate'>Left</button>
+          <div className='w-14 bg-poimandres-blackslate'></div>
+          <button className='w-14 bg-poimandres-blackslate'>Right</button>
+        </div>
+        <div className='flex h-14 justify-center'>
+          <button className='w-14 bg-poimandres-blackslate'>Down</button>
+        </div>
+      </div>
     </div>
   );
 };
