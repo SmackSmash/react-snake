@@ -312,7 +312,7 @@ const Snake = () => {
       </header>
       <div className='relative w-full'>
         {gameOver && (
-          <div className='absolute flex h-full w-full flex-col items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm'>
+          <div className='absolute flex h-full w-full flex-col items-center justify-center rounded bg-black bg-opacity-50 backdrop-blur-sm'>
             <h2 className='text-5xl text-poimandres-darkpink'>GAME OVER</h2>
             <h3 className='text-3xl text-poimandres-lighterblue'>Score: {score}</h3>
             {newHighScore && (
